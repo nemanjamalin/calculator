@@ -34,7 +34,10 @@ rows.forEach((row)=>{
 
 
 function operate(operator,a,b){
-    return operations[operator](Number(a),Number(b));
+    let result = operations[operator](Number(a),Number(b));
+    if(!String(result).includes('.')) return result;
+    return result.toFixed(3);
+    
 }
 
 function validateValue(value){
@@ -46,14 +49,23 @@ function validateValue(value){
 function displayButton(button){
     if(button.classList == "row") return;
 
+  
+
     if(button.classList == "clear"){
-        display.textContent = "";
+        display.textContent = "0";
         firstNumber = 0;
         secondNumber = 0;
         operator = "";
         return;
     }
 
+ 
+
+    if(button.classList == "operation" && firstNumber){
+        secondNumber = display.textContent;
+        firstNumber = operate(operator,firstNumber,secondNumber);
+        display.textContent = firstNumber;
+    }
     if(button.classList == "equal"){
         secondNumber = display.textContent;
         display.textContent = operate(operator,firstNumber,secondNumber);
@@ -61,9 +73,9 @@ function displayButton(button){
         return;
     } 
 
-    if(display.textContent == "" && button.classList == "operation") return;
+    if(display.textContent == "0" && button.classList == "operation") return;
 
-    if(button.classList == "operation" && display.textContent!= ""){
+    if(button.classList == "operation" && display.textContent!= "0"){
         if(validateValue(display.textContent))firstNumber = display.textContent;
         display.textContent = button.textContent;
         operator = display.textContent;
@@ -74,10 +86,19 @@ function displayButton(button){
         display.textContent = button.textContent;
         operationDisplayed = false;
         return;
+    } else if(button.classList == 'dot'){
+        if(display.textContent.includes('.')) return;
+        display.textContent+=button.textContent;
+    }else if(button.classList == 'zero'){
+        if(display.textContent=="0") return;
+        display.textContent+=button.textContent;
     }else{
+        if(display.textContent == "0") display.textContent ="";
         display.textContent+=button.textContent;
         return;
     }   
+
+   
 }
 // console.log(operate('-',123,23));
 
