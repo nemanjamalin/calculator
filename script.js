@@ -33,10 +33,25 @@ rows.forEach((row)=>{
 });
 
 
+function fixResult(result){
+    let counter = 0;
+    result = String(result);
+    if(!result.includes('.')) return Number(result);
+
+    if(!result[0]==0) return Number(result);
+    for(let i = result.length-1;i>=0;i--){
+        if(result[i]!=0) break;
+        counter++; 
+    }
+    result = result.slice(0,0-counter);
+    return result;
+}
+
+
 function operate(operator,a,b){
     let result = operations[operator](Number(a),Number(b));
     if(!String(result).includes('.')) return result;
-    return result.toFixed(3);
+    return fixResult(result);
     
 }
 
@@ -62,9 +77,8 @@ function displayButton(button){
  
 
     if(button.classList == "operation" && firstNumber){
-        secondNumber = display.textContent;
-        firstNumber = operate(operator,firstNumber,secondNumber);
-        display.textContent = firstNumber;
+        firstNumber = display.textContent;
+        console.log(firstNumber);
     }
     if(button.classList == "equal"){
         secondNumber = display.textContent;
@@ -73,9 +87,9 @@ function displayButton(button){
         return;
     } 
 
-    if(display.textContent == "0" && button.classList == "operation") return;
+    
 
-    if(button.classList == "operation" && display.textContent!= "0"){
+    if(button.classList == "operation"){
         if(validateValue(display.textContent))firstNumber = display.textContent;
         display.textContent = button.textContent;
         operator = display.textContent;
